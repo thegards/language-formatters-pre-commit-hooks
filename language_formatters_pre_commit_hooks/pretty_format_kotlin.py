@@ -68,7 +68,8 @@ def pretty_format_kotlin(argv: typing.Optional[typing.List[str]] = None) -> int:
     # To workaround this limitation we do run ktlint in check mode only,
     # which provides the expected exit status and we run it again in format
     # mode if autofix flag is enabled
-    check_status, check_output = run_command("java", "--add-opens=java.base/java.lang=ALL-UNNAMED", "-jar", ktlint_jar, "--verbose", "--relative", "--", *_fix_paths(args.filenames))
+    jvm_args=["--add-opens=java.base/java.lang=ALL-UNNAMED"]
+    check_status, check_output = run_command("java", *jvm_args, "-jar", ktlint_jar, "--verbose", "--relative", "--", *_fix_paths(args.filenames))
 
     not_pretty_formatted_files: typing.Set[str] = set()
     if check_status != 0:
@@ -76,7 +77,7 @@ def pretty_format_kotlin(argv: typing.Optional[typing.List[str]] = None) -> int:
 
         if args.autofix:
             print("Running ktlint format on {}".format(not_pretty_formatted_files))
-            run_command("java", "-jar", ktlint_jar, "--verbose", "--relative", "--format", "--", *_fix_paths(not_pretty_formatted_files))
+            run_command("java", *jvm_args, "-jar", ktlint_jar, "--verbose", "--relative", "--format", "--", *_fix_paths(not_pretty_formatted_files))
 
     status = 0
     if not_pretty_formatted_files:
