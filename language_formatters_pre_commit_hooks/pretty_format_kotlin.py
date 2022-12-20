@@ -64,7 +64,7 @@ def pretty_format_kotlin(argv: typing.Optional[typing.List[str]] = None) -> int:
     parser.add_argument("filenames", nargs="*", help="Filenames to fix")
     args = parser.parse_args(argv)
 
-    assert_max_jdk_version(Version("18.0"), inclusive=False)  # pragma: no cover
+    assert_max_jdk_version(Version("20.0"), inclusive=False)  # pragma: no cover
 
     ktlint_jar = _download_kotlin_formatter_jar(
         args.ktlint_version,
